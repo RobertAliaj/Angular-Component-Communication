@@ -17,7 +17,8 @@ import { CriteriaComponent } from './criteria/criteria.component';
   exports: [
     StarComponent,
     CommonModule,
-    FormsModule
+    FormsModule,
+    CriteriaComponent
   ]
 })
 export class SharedModule { }
