@@ -1,16 +1,19 @@
-import {Component, OnInit } from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 
 import {IProduct} from './product';
 import {ProductService} from './product.service';
+import {CriteriaComponent} from "../shared/criteria/criteria.component";
+import {ProductParameterService} from "./product-parameter.service";
 
 @Component({
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css']
 })
 export class ProductListComponent implements OnInit {
+  // showImage = false;
   pageTitle = 'Product List';
-  showImage = false;
   includeDetail: boolean = true;
+  parentListFilter: string;
 
   imageWidth = 50;
   imageMargin = 2;
@@ -18,18 +21,34 @@ export class ProductListComponent implements OnInit {
 
   filteredProducts: IProduct[] = [];
   products: IProduct[] = [];
+  @ViewChild(CriteriaComponent) filterComponent: CriteriaComponent;
 
-  constructor(private productService: ProductService) {
+  get showImage(): boolean {
+    return this.productParameterService.showImage;
+  }
+
+  set showImage(value: boolean) {
+    this.productParameterService.showImage = value;
+  }
+
+
+  constructor(private productService: ProductService,
+              private productParameterService: ProductParameterService) {
   }
 
   ngOnInit(): void {
     this.productService.getProducts().subscribe({
       next: products => {
         this.products = products;
-        this.performFilter();
+        this.filterComponent.listFilter = this.productParameterService.filterBy;
       },
       error: err => this.errorMessage = err
     });
+  }
+
+  onValueChange(value: string): void {
+    this.productParameterService.filterBy = value;
+    this.performFilter(value);
   }
 
   toggleImage(): void {
