@@ -29,8 +29,8 @@ export class CriteriaComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   set listFilter(value: string) {
-    this._listFilter = value;
-    this.valueChange.emit(value)
+      this._listFilter = value;
+      this.valueChange.emit(value)
   }
 
 
@@ -38,7 +38,6 @@ export class CriteriaComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes)
     if (changes['hitCount'] && !changes['hitCount'].currentValue) {
       this.hitMessage = 'No matches found';
     } else {

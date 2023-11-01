@@ -4,16 +4,15 @@ import {IProduct} from './product';
 import {ProductService} from './product.service';
 import {CriteriaComponent} from "../shared/criteria/criteria.component";
 import {ProductParameterService} from "./product-parameter.service";
+import {tap} from "rxjs";
 
 @Component({
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css']
 })
 export class ProductListComponent implements OnInit {
-  // showImage = false;
   pageTitle = 'Product List';
   includeDetail: boolean = true;
-  parentListFilter: string;
 
   imageWidth = 50;
   imageMargin = 2;
@@ -40,11 +39,12 @@ export class ProductListComponent implements OnInit {
     this.productService.getProducts().subscribe({
       next: products => {
         this.products = products;
-        this.filterComponent.listFilter = this.productParameterService.filterBy;
+        setTimeout(() => this.filterComponent.listFilter = this.productParameterService.filterBy, 0)
       },
       error: err => this.errorMessage = err
     });
   }
+
 
   onValueChange(value: string): void {
     this.productParameterService.filterBy = value;
