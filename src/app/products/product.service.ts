@@ -31,10 +31,10 @@ export class ProductService {
     if (id === 0) {
       return of(this.initializeProduct());
     }
-    if(this.products) {
+    if (this.products) {
       const foundItem = this.products.find(item => item.id === id)
-      if (foundItem){
-        return of (foundItem)
+      if (foundItem) {
+        return of(foundItem)
       }
     }
 
@@ -58,9 +58,15 @@ export class ProductService {
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
 
     const url = `${this.productsUrl}/${id}`;
-    return this.http.delete<IProduct>(url, {headers})
+    return this.http.delete<IProduct>(url, {headers: headers})
       .pipe(
         tap(() => console.log('deleteProduct: ' + id)),
+        tap(data => {
+          const foundIndex = this.products.findIndex(item => item.id === id)
+          if (foundIndex > -1) {
+            this.products.splice(foundIndex, 1)
+          }
+        }),
         catchError(this.handleError)
       );
   }
@@ -70,6 +76,7 @@ export class ProductService {
     return this.http.post<IProduct>(this.productsUrl, product, {headers})
       .pipe(
         tap(createdProduct => console.log('createProduct: ' + JSON.stringify(createdProduct))),
+        tap(createdProduct => this.products.push(createdProduct)),
         catchError(this.handleError)
       );
   }
