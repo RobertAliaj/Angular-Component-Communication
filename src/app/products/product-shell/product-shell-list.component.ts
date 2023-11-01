@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
-import { IProduct } from '../product';
-import { ProductService } from '../product.service';
+import {IProduct} from '../product';
+import {ProductService} from '../product.service';
 
 @Component({
   selector: 'pm-product-shell-list',
@@ -12,14 +12,18 @@ export class ProductShellListComponent implements OnInit {
   products: IProduct[] = [];
   errorMessage = '';
 
-  constructor(private productService: ProductService) { }
+  constructor(private productService: ProductService) {
+  }
 
   ngOnInit(): void {
     this.productService.getProducts().subscribe({
       next: products => this.products = products,
       error: err => this.errorMessage = err
     });
+  }
 
+  onSelected(product: IProduct): void {
+    this.productService.currentProduct = product;
   }
 
 }
