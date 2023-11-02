@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ProductService} from '../product.service';
 import {IProduct} from '../product';
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'pm-product-shell-detail',
@@ -9,9 +10,7 @@ import {IProduct} from '../product';
 export class ProductShellDetailComponent implements OnInit {
   pageTitle = 'Product Detail';
 
-  get product(): IProduct | null {
-    return this.productService.currentProduct;
-  }
+  product: IProduct | null;
 
   errorMessage = '';
 
@@ -19,6 +18,9 @@ export class ProductShellDetailComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.productService.selectedProductChanges$.subscribe(
+      selectedProduct => this.product = selectedProduct
+    )
   }
 
 }
