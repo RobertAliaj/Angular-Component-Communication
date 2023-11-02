@@ -1,13 +1,13 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ProductService} from '../product.service';
 import {IProduct} from '../product';
-import {Observable} from "rxjs";
+import {Observable, Subscription} from "rxjs";
 
 @Component({
   selector: 'pm-product-shell-detail',
   templateUrl: './product-shell-detail.component.html'
 })
-export class ProductShellDetailComponent implements OnInit {
+export class ProductShellDetailComponent implements OnInit, OnDestroy {
   pageTitle = 'Product Detail';
 
   product: IProduct | null;
@@ -17,10 +17,16 @@ export class ProductShellDetailComponent implements OnInit {
   constructor(private productService: ProductService) {
   }
 
+  sub: Subscription;
+
   ngOnInit() {
-    this.productService.selectedProductChanges$.subscribe(
+    this.sub = this.productService.selectedProductChanges$.subscribe(
       selectedProduct => this.product = selectedProduct
     )
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
 }
